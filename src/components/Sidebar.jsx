@@ -1,3 +1,5 @@
+import Button from "./Button";
+
 const Sidebar = ({ clickHandler, projects }) => {
   return (
     <aside className="w-1/3 px-8 py-16 bg-stone-900 text-stone-50 md:w72 rounded-r-xl">
@@ -5,16 +7,11 @@ const Sidebar = ({ clickHandler, projects }) => {
         Your projectst
       </h2>
       <div>
-        <button
-          onClick={clickHandler}
-          className="px-4 py-2 text-xs md:text-base rounded-md bg-stone-700 text-stone-400 hover:bg-stone-600 hover:text-stone-100"
-        >
-          + Add project
-        </button>
+        <Button onClick={clickHandler}>+ Add project</Button>
       </div>
       <ul>
-        {projects?.map((project) => {
-          return <li>{project.name}</li>;
+        {projects?.map((project, index) => {
+          return <li key={project.id}>{project.title}</li>;
         })}
       </ul>
     </aside>
