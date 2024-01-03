@@ -21,14 +21,24 @@ function App() {
 
   const saveProjectHandler = (projectData) => {
     setProjects((prevState) => {
+      const projectID = Math.random();
       const newProject = {
         ...projectData,
-        id: Math.random(),
+        id: projectID,
       };
       return {
         ...prevState,
-        projects: [...prevState.projects, projectData],
-        selectedProjectId: 1,
+        projects: [...prevState.projects, newProject],
+        selectedProjectId: undefined,
+      };
+    });
+  };
+
+  const cancelProjectHandler = () => {
+    setProjects((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
       };
     });
   };
@@ -37,7 +47,10 @@ function App() {
     <main className="h-screen my-8 flex gap-8">
       <Sidebar projects={projects.projects} clickHandler={addProjectHandler} />
       {projects.selectedProjectId === null ? (
-        <NewProjectForm saveProject={saveProjectHandler} />
+        <NewProjectForm
+          saveProject={saveProjectHandler}
+          cancelProject={cancelProjectHandler}
+        />
       ) : (
         <NoProjectSelected clickHandler={addProjectHandler} />
       )}
