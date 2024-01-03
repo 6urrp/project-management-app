@@ -3,6 +3,7 @@ import NoProjectSelected from "./components/NoProjectSelected.jsx";
 import NewProjectForm from "./components/NewProjectForm.jsx";
 
 import { useState } from "react";
+import SelectedProject from "./components/SelectedProject.jsx";
 
 function App() {
   const [projects, setProjects] = useState({
@@ -43,17 +44,57 @@ function App() {
     });
   };
 
+  const handleSelectProject = (projectID) => {
+    setProjects((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: projectID,
+      };
+    });
+  };
+
+  const deleteSelectedProject = (projectID) => {
+    setProjects((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter(
+          (project) => project.id !== prevState.selectedProjectId
+        ),
+      };
+    });
+  };
+
+  const selectedProject = projects.projects.find(
+    (project) => project.id == projects.selectedProjectId
+  );
+
+  let content = (
+    <SelectedProject
+      project={selectedProject}
+      deleteProject={deleteSelectedProject}
+    />
+  );
+
+  if (projects.selectedProjectId === null) {
+    content = (
+      <NewProjectForm
+        saveProject={saveProjectHandler}
+        cancelProject={cancelProjectHandler}
+      />
+    );
+  } else if (projects.selectedProjectId === undefined) {
+    content = <NoProjectSelected clickHandler={addProjectHandler} />;
+  }
+
   return (
     <main className="h-screen my-8 flex gap-8">
-      <Sidebar projects={projects.projects} clickHandler={addProjectHandler} />
-      {projects.selectedProjectId === null ? (
-        <NewProjectForm
-          saveProject={saveProjectHandler}
-          cancelProject={cancelProjectHandler}
-        />
-      ) : (
-        <NoProjectSelected clickHandler={addProjectHandler} />
-      )}
+      <Sidebar
+        projects={projects.projects}
+        clickHandler={addProjectHandler}
+        selectProject={handleSelectProject}
+      />
+      {content}
     </main>
   );
 }
